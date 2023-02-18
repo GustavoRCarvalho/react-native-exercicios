@@ -1,48 +1,71 @@
-import React from 'react';
-import {View, Text, TextInput, StyleSheet, Pressable, Image} from 'react-native';
+import React, { useRef, useState } from 'react';
+import {View, Text, TextInput, StyleSheet, Pressable, Image, ImageBackground, Dimensions} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
-const LogoPngLogin = '../assets/static/LogoPngLogin.png'
+const LogoLogin = '../assets/static/LogoLogin.png'
+const backgroundLogin = '../assets/static/BackgroundLogin.png'
 
 export default () => {
+  const [login, setLogin] = useState({})
+
+  function handleLoginSubmit() {
+    console.warn("Login", login)
+  }
+
+  function handleLoginInput(event, type) {
+    setLogin((e) => {return {...e, [type]: event.nativeEvent.text}})
+  }
+
   return (
-    <View style={stylesLogin.view}>
-      <Image source={require(LogoPngLogin)}/>
-      <View style={stylesLogin.loginView}>
-        <View style={stylesLogin.inputView}>
-          <Icon name="user" size={25} style={stylesLogin.inputIcon}/>
-          <TextInput
-            placeholder="Nome do Usuário"
-            placeholderTextColor={'#FF824A'}
-            maxLength={40}
-            style={stylesLogin.inputText}
-          />
+    <ImageBackground source={require(backgroundLogin)} resizeMode="cover" imageStyle={stylesLogin.imageBackground}>
+      <View style={stylesLogin.view}>
+        <Image source={require(LogoLogin)}/>
+        <View style={stylesLogin.loginView}>
+          <View style={stylesLogin.inputView}>
+            <Icon name="user" size={25} style={stylesLogin.inputIcon}/>
+            <TextInput
+              value={login.user}
+              onChange={event => handleLoginInput(event, "user")}
+              placeholder="Nome do Usuário"
+              placeholderTextColor={'#FF824A'}
+              onSubmitEditing={()=>this.passwordRef.focus()}
+              maxLength={40}
+              style={stylesLogin.inputText}
+            />
+          </View>
+          <View style={stylesLogin.inputView}>
+            <Icon name="lock" size={25} style={stylesLogin.inputIcon}/>
+            <TextInput
+              value={login.password}
+              onChange={event => handleLoginInput(event, "password")}
+              placeholder="Senha"
+              placeholderTextColor={'#FF824A'}
+              secureTextEntry
+              maxLength={40}
+              ref={passwordRef => (this.passwordRef = passwordRef)}
+              onSubmitEditing={handleLoginSubmit}
+              style={stylesLogin.inputText}
+            />
+          </View>
         </View>
-        <View style={stylesLogin.inputView}>
-          <Icon name="lock" size={25} style={stylesLogin.inputIcon}/>
-          <TextInput
-            placeholder="Senha"
-            placeholderTextColor={'#FF824A'}
-            secureTextEntry
-            maxLength={40}
-            style={stylesLogin.inputText}
-          />
-        </View>
+        <Pressable style={stylesLogin.button} onPress={handleLoginSubmit}>
+          <Text style={stylesLogin.buttonText}>LOGIN</Text>
+        </Pressable>
       </View>
-      <Pressable style={stylesLogin.button}>
-        <Text style={stylesLogin.buttonText}>LOGIN</Text>
-      </Pressable>
-    </View>
+    </ImageBackground>
   );
 };
 
 const stylesLogin = StyleSheet.create({
   view: {
-    height: '100%',
-    padding: 10,
-    display: 'flex',
+    height: "100%",
+    width: "100%",
+
     alignItems: 'center',
     justifyContent: 'space-around',
-    backgroundColor: '#ddd',
+  },
+  imageBackground: {
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width,
   },
   button: {
     width: "85%",
@@ -64,7 +87,7 @@ const stylesLogin = StyleSheet.create({
     color: '#FF824A',
   },
   loginView: {
-    width: "90%"
+    width: "90%",
   },
   inputView: {
     width: '100%',
@@ -83,6 +106,7 @@ const stylesLogin = StyleSheet.create({
     color: '#FF824A',
   },
   inputText: {
+    maxWidth: "80%",
     fontSize: 16,
     color: '#FF824A',
   },

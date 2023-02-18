@@ -5,9 +5,7 @@ import LoginExperimental from './components/LoginExperimental';
 
 export default () => {
   return (
-    <View>
-      {/* <Primeiro /> */}
+      //<Primeiro />
       <LoginExperimental />
-    </View>
   );
 };
